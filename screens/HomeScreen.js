@@ -4,8 +4,14 @@ import tw from "tailwind-react-native-classnames"
 import NavOptions from '../components/NavOptions'
 import {API_KEY} from "@env"
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
+import { useDispatch } from 'react-redux'
+import {setOrigin, setDestination} from "../slices/navSlice"
 
 const HomeScreen = () => {
+
+  const dispatch = useDispatch();
+  
+
   return (
     <View style={tw`bg-white h-full mt-8`}>
       <View style={tw`p-5`}>
@@ -23,12 +29,16 @@ const HomeScreen = () => {
         fetchDetails={true}
         enablePoweredByContainer={false}
         minLength={2}
-        query={{key: "AIzaSyBrIdQ0nyaL7WTVWZbwCT4wEoUEMQoZqbA", language: "en"}}
+        query={{key: API_KEY, language: "en"}}
         onPress={(data, details = null) => {
-          console.log(data);
-          console.log(details)
-        }}
+          dispatch(setOrigin({
+            location: details.geometry.location,
+            description: data.description
+          }));
 
+          setDestination(null)
+        }}
+        returnKeyType={"search"}
          />
         <NavOptions />
       </View>
